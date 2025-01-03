@@ -19,7 +19,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       
-      <Route path="/dashboard" element={
+      <Route path="/" element={
         <PrivateRoute>
           <MainLayout>
             <Dashboard />

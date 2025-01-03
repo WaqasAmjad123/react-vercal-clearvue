@@ -47,7 +47,7 @@ const MainLayout = ({ children }) => {
   const { user, logout } = useAuth();
 
   const menuItems = [
-    { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
+    { text: 'Dashboard', icon: <Dashboard />, path: '/' },
     { text: 'Customers', icon: <People />, path: '/customers' },
     { text: 'Projects', icon: <Assignment />, path: '/projects' },
     { text: 'Suppliers', icon: <Business />, path: '/suppliers' },

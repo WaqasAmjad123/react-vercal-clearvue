@@ -29,7 +29,7 @@ const NotFound = () => {
       <Button
         variant="contained"
         startIcon={<Home />}
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/')}
         size="large"
       >
         Back to Home

@@ -41,7 +41,7 @@ const Login = () => {
 
     const success = login(formData);
     if (success) {
-      navigate('/dashboard');
+      navigate('/');
     } else {
       setError('Invalid credentials. Try email: admin@example.com, password: admin123');
     }
