@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -27,7 +27,7 @@ import {
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,12 +35,21 @@ const Login = () => {
     password: ''
   });
 
+  useEffect(() => {
+    // Check if user is already logged in via localStorage
+    const isUserLoggedIn = localStorage.getItem('isAuthenticated') === 'true';
+    if (isUserLoggedIn) {
+      navigate('/'); // Navigate to dashboard instead of root
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
-    const success = login(formData);
-    if (success) {
+    // Check for demo credentials
+    if (formData.email === 'admin@example.com' && formData.password === 'admin123') {
+      login(formData);
       navigate('/');
     } else {
       setError('Invalid credentials. Try email: admin@example.com, password: admin123');

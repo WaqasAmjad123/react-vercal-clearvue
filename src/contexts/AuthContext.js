@@ -1,45 +1,50 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext(null);
-
-// Mock user data
-const MOCK_USER = {
-  id: 1,
-  name: 'Admin User',
-  email: 'admin@example.com',
-  role: 'admin'
-};
-
-// Mock credentials for login
-const MOCK_CREDENTIALS = {
-  email: 'admin@example.com',
-  password: 'admin123'
-};
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Check localStorage on initial load
+  useEffect(() => {
+    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+    const savedUser = JSON.parse(localStorage.getItem('user'));
+    setIsAuthenticated(authStatus);
+    setUser(savedUser);
+  }, []);
 
   const login = (credentials) => {
-    // Mock authentication logic
-    if (credentials.email === MOCK_CREDENTIALS.email && 
-        credentials.password === MOCK_CREDENTIALS.password) {
-      setUser(MOCK_USER);
-      localStorage.setItem('user', JSON.stringify(MOCK_USER));
+    // Simulate API login with demo credentials
+    if (credentials.email === 'admin@example.com' && credentials.password === 'admin123') {
+      const userData = {
+        email: credentials.email,
+        name: 'Admin User',
+        role: 'admin'
+      };
+      
+      // Store auth state in localStorage
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      setIsAuthenticated(true);
+      setUser(userData);
       return true;
     }
     return false;
   };
 
   const logout = () => {
-    setUser(null);
+    // Clear localStorage
+    localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
+    
+    setIsAuthenticated(false);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -51,4 +56,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}; 
+};
