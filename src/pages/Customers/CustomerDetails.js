@@ -17,7 +17,8 @@ import {
   ListItemIcon,
   Card,
   CardContent,
-  Avatar
+  Avatar,
+  Alert
 } from '@mui/material';
 import {
   Person,
@@ -35,6 +36,7 @@ import {
   Warning
 } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
+import DetailPageHeader from '../../components/common/DetailPageHeader';
 
 const TabPanel = ({ children, value, index, ...other }) => (
   <div
@@ -50,56 +52,8 @@ const TabPanel = ({ children, value, index, ...other }) => (
   </div>
 );
 
-const CustomerDetails = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+const CustomerDetails = ({ customer, onEdit, onDelete, onClose }) => {
   const [tabValue, setTabValue] = React.useState(0);
-
-  // Mock customer data - replace with API call
-  const [customer] = React.useState({
-    id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '+1-234-567-8900',
-    address: '123 Main St, City, State 12345',
-    type: 'Residential',
-    status: 'Active',
-    projectCount: 2,
-    totalSpent: 25000,
-    notes: 'Premium customer with excellent payment history',
-    projects: [
-      {
-        id: 1,
-        name: 'Solar Panel Installation',
-        status: 'Completed',
-        date: '2024-01-15',
-        value: 15000
-      },
-      {
-        id: 2,
-        name: 'Battery System Upgrade',
-        status: 'In Progress',
-        date: '2024-02-01',
-        value: 10000
-      }
-    ],
-    transactions: [
-      {
-        id: 1,
-        type: 'Payment',
-        amount: 5000,
-        date: '2024-01-10',
-        status: 'Completed'
-      },
-      {
-        id: 2,
-        type: 'Invoice',
-        amount: 10000,
-        date: '2024-01-15',
-        status: 'Pending'
-      }
-    ]
-  });
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -116,45 +70,32 @@ const CustomerDetails = () => {
     return colors[status] || 'default';
   };
 
-  return (
-    <Box>
-      {/* Header */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <Box>
-          <Typography variant="h4" gutterBottom>
-            Customer Details
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Chip 
-              label={customer.type} 
-              color="primary"
-              size="small"
-            />
-            <Chip 
-              label={customer.status} 
-              color={getStatusColor(customer.status)}
-              size="small"
-            />
-          </Box>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button
-            variant="outlined"
-            startIcon={<Edit />}
-            onClick={() => {/* Handle edit */}}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<Delete />}
-            onClick={() => {/* Handle delete */}}
-          >
-            Delete
-          </Button>
-        </Box>
+  if (!customer) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error">
+          Customer not found
+        </Alert>
       </Box>
+    );
+  }
+
+  // Add default empty arrays if properties don't exist
+  const customerData = {
+    ...customer,
+    projects: customer.projects || [],
+    transactions: customer.transactions || [],
+    notes: customer.notes || ''
+  };
+
+  return (
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100%' }}>
+      <DetailPageHeader
+        title="Customer Details"
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onClose={onClose}
+      />
 
       {/* Main Content */}
       <Grid container spacing={3}>
@@ -267,95 +208,113 @@ const CustomerDetails = () => {
 
             {/* Projects Tab */}
             <TabPanel value={tabValue} index={0}>
-              <List>
-                {customer.projects.map((project) => (
-                  <Paper 
-                    key={project.id}
-                    sx={{ 
-                      mb: 2, 
-                      p: 2,
-                      '&:hover': {
-                        bgcolor: 'action.hover'
-                      }
-                    }}
-                  >
-                    <Grid container alignItems="center" spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="subtitle1">
-                          {project.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Date: {project.date}
-                        </Typography>
+              {customerData.projects.length > 0 ? (
+                <List>
+                  {customerData.projects.map((project) => (
+                    <Paper 
+                      key={project.id}
+                      sx={{ 
+                        mb: 2, 
+                        p: 2,
+                        '&:hover': {
+                          bgcolor: 'action.hover'
+                        }
+                      }}
+                    >
+                      <Grid container alignItems="center" spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="subtitle1">
+                            {project.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Date: {project.date}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <Chip 
+                            label={project.status}
+                            color={getStatusColor(project.status)}
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <Typography variant="h6" align="right">
+                            ${project.value.toLocaleString()}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
-                        <Chip 
-                          label={project.status}
-                          color={getStatusColor(project.status)}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={3}>
-                        <Typography variant="h6" align="right">
-                          ${project.value.toLocaleString()}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
-              </List>
+                    </Paper>
+                  ))}
+                </List>
+              ) : (
+                <Typography variant="body1" color="text.secondary">
+                  No projects found for this customer.
+                </Typography>
+              )}
             </TabPanel>
 
             {/* Transactions Tab */}
             <TabPanel value={tabValue} index={1}>
-              <List>
-                {customer.transactions.map((transaction) => (
-                  <Paper 
-                    key={transaction.id}
-                    sx={{ 
-                      mb: 2, 
-                      p: 2,
-                      '&:hover': {
-                        bgcolor: 'action.hover'
-                      }
-                    }}
-                  >
-                    <Grid container alignItems="center" spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="subtitle1">
-                          {transaction.type}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Date: {transaction.date}
-                        </Typography>
+              {customerData.transactions.length > 0 ? (
+                <List>
+                  {customerData.transactions.map((transaction) => (
+                    <Paper 
+                      key={transaction.id}
+                      sx={{ 
+                        mb: 2, 
+                        p: 2,
+                        '&:hover': {
+                          bgcolor: 'action.hover'
+                        }
+                      }}
+                    >
+                      <Grid container alignItems="center" spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="subtitle1">
+                            {transaction.type}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Date: {transaction.date}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <Chip 
+                            label={transaction.status}
+                            color={getStatusColor(transaction.status)}
+                            size="small"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <Typography 
+                            variant="h6" 
+                            align="right"
+                            color={transaction.type === 'Payment' ? 'success.main' : 'inherit'}
+                          >
+                            ${transaction.amount.toLocaleString()}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={3}>
-                        <Chip 
-                          label={transaction.status}
-                          color={getStatusColor(transaction.status)}
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={3}>
-                        <Typography 
-                          variant="h6" 
-                          align="right"
-                          color={transaction.type === 'Payment' ? 'success.main' : 'inherit'}
-                        >
-                          ${transaction.amount.toLocaleString()}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ))}
-              </List>
+                    </Paper>
+                  ))}
+                </List>
+              ) : (
+                <Typography variant="body1" color="text.secondary">
+                  No transactions found for this customer.
+                </Typography>
+              )}
             </TabPanel>
 
             {/* Notes Tab */}
             <TabPanel value={tabValue} index={2}>
-              <Typography variant="body1">
-                {customer.notes}
-              </Typography>
+              {customerData.notes ? (
+                <Typography variant="body1">
+                  {customerData.notes}
+                </Typography>
+              ) : (
+                <Typography variant="body1" color="text.secondary">
+                  No notes available for this customer.
+                </Typography>
+              )}
             </TabPanel>
           </Paper>
         </Grid>

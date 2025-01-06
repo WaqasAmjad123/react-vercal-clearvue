@@ -32,9 +32,11 @@ import {
   MoreVert,
   Link as LinkIcon,
   Phone,
-  Email
+  Email,
+  Visibility
 } from '@mui/icons-material';
 import SupplierForm from './SupplierForm';
+import SupplierDetails from './SupplierDetails';
 
 // Mock data - replace with actual API calls
 const initialSuppliers = [
@@ -67,8 +69,8 @@ const SupplierList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openForm, setOpenForm] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
 
   // Filter suppliers based on search term
   const filteredSuppliers = suppliers.filter(supplier =>
@@ -77,13 +79,9 @@ const SupplierList = () => {
     )
   );
 
-  const handleOpenMenu = (event, supplier) => {
-    setAnchorEl(event.currentTarget);
+  const handleViewDetails = (supplier) => {
     setSelectedSupplier(supplier);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
+    setOpenDetails(true);
   };
 
   const handleAdd = () => {
@@ -93,12 +91,10 @@ const SupplierList = () => {
 
   const handleEdit = () => {
     setOpenForm(true);
-    handleCloseMenu();
   };
 
   const handleDelete = () => {
     setOpenDelete(true);
-    handleCloseMenu();
   };
 
   const handleSubmit = (formData) => {
@@ -172,7 +168,16 @@ const SupplierList = () => {
           </TableHead>
           <TableBody>
             {filteredSuppliers.map((supplier) => (
-              <TableRow key={supplier.id}>
+              <TableRow 
+                key={supplier.id}
+                onClick={() => handleViewDetails(supplier)}
+                sx={{ 
+                  '&:hover': { 
+                    backgroundColor: 'action.hover',
+                    cursor: 'pointer'
+                  }
+                }}
+              >
                 <TableCell>{supplier.name}</TableCell>
                 <TableCell>{supplier.contactPerson}</TableCell>
                 <TableCell>
@@ -201,16 +206,78 @@ const SupplierList = () => {
                     <IconButton 
                       size="small" 
                       color="primary"
-                      onClick={() => window.open(`https://${supplier.website}`, '_blank')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`https://${supplier.website}`, '_blank');
+                      }}
                     >
                       <LinkIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton onClick={(e) => handleOpenMenu(e, supplier)}>
-                    <MoreVert />
-                  </IconButton>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 1, 
+                    justifyContent: 'flex-end'
+                  }}>
+                    <Tooltip title="View Details">
+                      <IconButton 
+                        size="small"
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewDetails(supplier);
+                        }}
+                        sx={{
+                          '&:hover': { 
+                            backgroundColor: 'primary.light',
+                            color: 'primary.main'
+                          }
+                        }}
+                      >
+                        <Visibility fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit Supplier">
+                      <IconButton 
+                        size="small"
+                        color="info"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedSupplier(supplier);
+                          setOpenForm(true);
+                        }}
+                        sx={{
+                          '&:hover': { 
+                            backgroundColor: 'info.light',
+                            color: 'info.main'
+                          }
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete Supplier">
+                      <IconButton 
+                        size="small"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedSupplier(supplier);
+                          setOpenDelete(true);
+                        }}
+                        sx={{
+                          '&:hover': { 
+                            backgroundColor: 'error.light',
+                            color: 'error.main'
+                          }
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
@@ -218,25 +285,44 @@ const SupplierList = () => {
         </Table>
       </TableContainer>
 
-      {/* Action Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-      >
-        <MenuItem onClick={handleEdit}>
-          <ListItemIcon>
-            <Edit fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
-          <ListItemIcon>
-            <Delete fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
-        </MenuItem>
-      </Menu>
+      {/* Supplier Details Dialog */}
+      {openDetails && (
+        <Dialog
+          open={openDetails}
+          onClose={() => {
+            setOpenDetails(false);
+            setSelectedSupplier(null);
+          }}
+          maxWidth="lg"
+          fullWidth
+          PaperProps={{
+            sx: {
+              height: '90vh',
+              maxHeight: '90vh'
+            }
+          }}
+        >
+          <DialogContent sx={{ p: 0 }}>
+            <Box sx={{ p: 3 }}>
+              <SupplierDetails 
+                supplier={selectedSupplier}
+                onEdit={() => {
+                  setOpenDetails(false);
+                  setOpenForm(true);
+                }}
+                onDelete={() => {
+                  setOpenDetails(false);
+                  setOpenDelete(true);
+                }}
+                onClose={() => {
+                  setOpenDetails(false);
+                  setSelectedSupplier(null);
+                }}
+              />
+            </Box>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Supplier Form Dialog */}
       {openForm && (

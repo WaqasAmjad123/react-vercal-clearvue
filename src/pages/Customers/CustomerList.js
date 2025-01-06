@@ -319,9 +319,11 @@ const CustomerList = () => {
               {filteredCustomers.map((customer) => (
                 <TableRow 
                   key={customer.id}
+                  onClick={() => handleViewDetails(customer)}
                   sx={{ 
                     '&:hover': { 
-                      backgroundColor: 'action.hover' 
+                      backgroundColor: 'action.hover',
+                      cursor: 'pointer'
                     }
                   }}
                 >
