@@ -323,7 +323,7 @@ const MainLayout = ({ children }) => {
               </Typography>
             </Box>
             <Divider sx={{ borderColor: 'primary.light' }} />
-            <MenuItem onClick={() => navigate('/profile')}>
+            {/* <MenuItem onClick={() => navigate('/profile')}>
               <ListItemIcon>
                 <Settings fontSize="small" sx={{ color: 'secondary.main' }} />
               </ListItemIcon>
@@ -334,7 +334,7 @@ const MainLayout = ({ children }) => {
                   color: 'secondary.main'
                 }}
               />
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <Logout fontSize="small" sx={{ color: 'error.main' }} />

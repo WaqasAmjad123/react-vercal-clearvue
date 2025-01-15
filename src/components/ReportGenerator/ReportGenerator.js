@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Button,
   Dialog,
@@ -17,8 +17,28 @@ import {
 import { PictureAsPdf, Download } from '@mui/icons-material';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const ReportGenerator = ({ data, reportType }) => {
+  const chartRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,6 +47,50 @@ const ReportGenerator = ({ data, reportType }) => {
     includeDetails: true,
     includeSummary: true,
   });
+
+  const chartData = {
+    labels: data.recentProjects.map(project => project.name),
+    datasets: [
+      {
+        label: 'Project Progress',
+        data: data.recentProjects.map(project => project.progress),
+        backgroundColor: '#71fcca',
+        borderColor: '#71fcca',
+        borderWidth: 1,
+        borderRadius: 4,
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        title: {
+          display: true,
+          text: 'Progress (%)'
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Projects'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: true,
+        text: 'Project Progress'
+      }
+    }
+  };
 
   const handleOptionChange = (event) => {
     setOptions({
@@ -99,17 +163,23 @@ const ReportGenerator = ({ data, reportType }) => {
         yPos = doc.lastAutoTable.finalY + 20;
       }
 
-      // Add charts if selected (mock chart for demonstration)
-      if (options.includeCharts) {
+      // Add charts if selected (now using actual chart)
+      if (options.includeCharts && chartRef.current) {
         doc.setFontSize(16);
         doc.text('Project Progress Chart', 20, yPos);
         yPos += 10;
 
-        // Mock chart (in real implementation, you'd use Chart.js or similar)
-        doc.setDrawColor(0);
-        doc.setFillColor(200, 220, 255);
-        doc.rect(20, yPos, 170, 60, 'F');
-        yPos += 70;
+        // Convert chart to image
+        const canvas = chartRef.current.canvas;
+        const chartImage = canvas.toDataURL('image/png', 1.0);
+        
+        // Calculate dimensions to maintain aspect ratio
+        const chartWidth = 170;
+        const chartHeight = (canvas.height * chartWidth) / canvas.width;
+        
+        // Add chart image to PDF
+        doc.addImage(chartImage, 'PNG', 20, yPos, chartWidth, chartHeight);
+        yPos += chartHeight + 10;
       }
 
       // Save the PDF
@@ -187,6 +257,16 @@ const ReportGenerator = ({ data, reportType }) => {
               </Stack>
             </FormControl>
 
+            {options.includeCharts && (
+              <Box sx={{ height: 300, mt: 2 }}>
+                <Bar
+                  ref={chartRef}
+                  data={chartData}
+                  options={chartOptions}
+                />
+              </Box>
+            )}
+
             {loading && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <CircularProgress />
@@ -198,6 +278,9 @@ const ReportGenerator = ({ data, reportType }) => {
           <Button 
             onClick={() => setOpen(false)} 
             disabled={loading}
+            sx={{ 
+              color: 'primary.main',
+            }}
           >
             Cancel
           </Button>
