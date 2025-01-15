@@ -23,7 +23,7 @@ import {
   WbSunny,
   LightMode
 } from '@mui/icons-material';
-
+import clearvueLogo from '../../assets/images/logoclearvue2-removebg-preview.png';
 const Login = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -112,7 +112,7 @@ const Login = () => {
           }}
         >
           <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <Avatar
+            {/* <Avatar
               sx={{
                 width: 70,
                 height: 70,
@@ -122,7 +122,16 @@ const Login = () => {
               }}
             >
               <WbSunny sx={{ fontSize: 40 }} />
-            </Avatar>
+            </Avatar> */}
+             <img
+              src={clearvueLogo}
+              alt="ClearVue"
+              style={{
+                height: 'auto',
+                width: '200px',
+                objectFit: 'contain'
+              }}
+            />
             <Typography 
               variant="h4" 
               sx={{ 

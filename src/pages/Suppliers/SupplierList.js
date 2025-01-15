@@ -191,12 +191,12 @@ const SupplierList = () => {
                   <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                     <Tooltip title={supplier.email}>
                       <IconButton size="small" color="primary">
-                        <Email fontSize="small" />
+                        <Email fontSize="small"  color="primary"/>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={supplier.phone}>
-                      <IconButton size="small" color="primary">
-                        <Phone fontSize="small" />
+                      <IconButton size="small" color="primary" >
+                        <Phone fontSize="small" color="primary"/>
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -211,7 +211,7 @@ const SupplierList = () => {
                         window.open(`https://${supplier.website}`, '_blank');
                       }}
                     >
-                      <LinkIcon fontSize="small" />
+                      <LinkIcon fontSize="small" color="primary"/>
                     </IconButton>
                   </Tooltip>
                 </TableCell>
@@ -230,9 +230,10 @@ const SupplierList = () => {
                           handleViewDetails(supplier);
                         }}
                         sx={{
+                          color: 'primary.main',
                           '&:hover': { 
                             backgroundColor: 'primary.light',
-                            color: 'primary.main'
+                            color: 'secondary.main'
                           }
                         }}
                       >
@@ -249,9 +250,10 @@ const SupplierList = () => {
                           setOpenForm(true);
                         }}
                         sx={{
+                          color: 'primary.main',
                           '&:hover': { 
-                            backgroundColor: 'info.light',
-                            color: 'info.main'
+                            backgroundColor: 'primary.light',
+                            color: 'secondary.main'
                           }
                         }}
                       >
@@ -268,9 +270,10 @@ const SupplierList = () => {
                           setOpenDelete(true);
                         }}
                         sx={{
+                          color: 'primary.main',
                           '&:hover': { 
-                            backgroundColor: 'error.light',
-                            color: 'error.main'
+                            backgroundColor: 'primary.light',
+                            color: 'secondary.main'
                           }
                         }}
                       >

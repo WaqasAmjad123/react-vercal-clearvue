@@ -155,7 +155,14 @@ const SupplierForm = ({ open, onClose, onSubmit, initialData = null }) => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
+        <Button 
+            onClick={onClose}
+            sx={{ 
+              color: 'primary.main',
+            }}
+          >
+            Cancel
+          </Button>
           <Button 
             type="submit" 
             variant="contained"

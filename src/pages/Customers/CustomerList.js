@@ -339,12 +339,12 @@ const CustomerList = () => {
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Tooltip title={customer.email}>
                         <IconButton size="small">
-                          <Email fontSize="small" />
+                          <Email fontSize="small" color='primary' />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={customer.phone}>
                         <IconButton size="small">
-                          <Phone fontSize="small" />
+                          <Phone fontSize="small" color='primary' />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -373,16 +373,17 @@ const CustomerList = () => {
                             handleViewDetails(customer);
                           }}
                           sx={{
+                            color: 'primary.main',
                             '&:hover': { 
                               backgroundColor: 'primary.light',
-                              color: 'primary.main'
+                              color: 'secondary.main'
                             }
                           }}
                         >
                           <Visibility fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Edit Customer">
+                      <Tooltip title="Edit Customer" >
                         <IconButton 
                           size="small"
                           color="info"
@@ -392,9 +393,10 @@ const CustomerList = () => {
                             setOpenForm(true);
                           }}
                           sx={{
+                            color: 'primary.main',
                             '&:hover': { 
-                              backgroundColor: 'info.light',
-                              color: 'info.main'
+                              backgroundColor: 'primary.light',
+                              color: 'secondary.main'
                             }
                           }}
                         >
@@ -411,9 +413,10 @@ const CustomerList = () => {
                             setOpenDelete(true);
                           }}
                           sx={{
+                            color: 'primary.main',
                             '&:hover': { 
-                              backgroundColor: 'error.light',
-                              color: 'error.main'
+                              backgroundColor: 'primary.light',
+                              color: 'secondary.main'
                             }
                           }}
                         >

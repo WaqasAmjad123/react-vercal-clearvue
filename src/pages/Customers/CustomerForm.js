@@ -253,7 +253,9 @@ const CustomerForm = ({ open, onClose, onSubmit, initialData = null }) => {
         <DialogActions sx={{ p: 2.5 }}>
           <Button 
             onClick={onClose}
-            color="inherit"
+            sx={{ 
+              color: 'primary.main',
+            }}
           >
             Cancel
           </Button>

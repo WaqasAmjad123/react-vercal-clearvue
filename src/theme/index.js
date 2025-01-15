@@ -3,14 +3,16 @@ import { createTheme } from '@mui/material';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
-      dark: '#1565c0',
+      main: '#0a183b',
+      light: '#1a2855',
+      dark: '#060d24',
+      contrastText: '#ffffff'
     },
     secondary: {
-      main: '#9c27b0',
-      light: '#ba68c8',
-      dark: '#7b1fa2',
+      main: '#71fcca',
+      light: '#8ffdd5',
+      dark: '#5ad9ac',
+      contrastText: '#0a183b'
     },
     background: {
       default: '#f5f5f5',
@@ -45,11 +47,49 @@ export const theme = createTheme({
           textTransform: 'none',
           borderRadius: 8,
           padding: '8px 16px',
+          fontWeight: 600,
         },
         contained: {
-          boxShadow: 'none',
+          background: 'linear-gradient(45deg, #71fcca 30%, #8df3ed 90%)',
+          color: '#0a183b',
           '&:hover': {
-            boxShadow: 'none',
+            background: 'linear-gradient(45deg,  #8df3ed 30% ,#71fcca 90%) ',
+          },
+          '&.Mui-disabled': {
+            background: 'linear-gradient(45deg, rgba(113, 252, 202, 0.5) 30%, rgba(143, 253, 213, 0.5) 90%)',
+            color: '#0a183b',
+          },
+        },
+        outlined: {
+          borderColor: '#71fcca',
+          color: '#0a183b',
+          borderWidth: 2,
+          '&:hover': {
+            borderColor: '#8ffdd5',
+            backgroundColor: 'rgba(113, 252, 202, 0.04)',
+          },
+          '&.Mui-disabled': {
+            borderColor: 'rgba(113, 252, 202, 0.5)',
+            color: 'rgba(113, 252, 202, 0.5)',
+          },
+        },
+        text: {
+          color: '#71fcca',
+          '&:hover': {
+            backgroundColor: 'rgba(113, 252, 202, 0.04)',
+          },
+          '&.Mui-disabled': {
+            color: 'rgba(113, 252, 202, 0.5)',
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#71fcca',
+          '&:hover': {
+            backgroundColor: 'rgba(113, 252, 202, 0.04)',
           },
         },
       },
@@ -94,6 +134,38 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
+        },
+      },
+    },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: {
+          '& .MuiButton-root': {
+            backgroundColor: '#0a183b',
+            // color: '#71fcca',
+            borderColor: '#1a2855',
+            '&:hover': {
+              backgroundColor: '#1a2855',
+            },
+            '&.Mui-disabled': {
+              backgroundColor: 'rgba(10, 24, 59, 0.5)',
+              color: 'rgba(113, 252, 202, 0.5)',
+            },
+          },
+          '& .MuiButton-outlined': {
+            backgroundColor: 'transparent',
+            borderColor: '#0a183b',
+            color: '#0a183b',
+            '&:hover': {
+              backgroundColor: 'rgba(10, 24, 59, 0.04)',
+              borderColor: '#1a2855',
+            },
+          },
+        },
+        grouped: {
+          '&:not(:last-of-type)': {
+            borderColor: '#1a2855',
+          },
         },
       },
     },

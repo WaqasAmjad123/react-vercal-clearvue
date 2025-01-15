@@ -20,7 +20,7 @@ const DetailPageHeader = ({ title, onEdit, onDelete, onClose }) => {
         p: 3, 
         mb: 3, 
         borderRadius: 2,
-        background: 'linear-gradient(to right, #1976d2, #64b5f6)'
+        background: 'linear-gradient(to right, #0a183b, #1a2855)'
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

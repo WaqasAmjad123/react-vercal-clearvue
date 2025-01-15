@@ -394,6 +394,13 @@ const ProjectList = () => {
                           size="small"
                           color="primary"
                           onClick={() => handleViewDetails(project)}
+                          sx={{
+                            color: 'primary.main',
+                            '&:hover': { 
+                              backgroundColor: 'primary.light',
+                              color: 'secondary.main'
+                            }
+                          }}
                         >
                           <Visibility fontSize="small" />
                         </IconButton>
@@ -406,6 +413,13 @@ const ProjectList = () => {
                             setSelectedProject(project);
                             setOpenForm(true);
                           }}
+                          sx={{
+                            color: 'primary.main',
+                            '&:hover': { 
+                              backgroundColor: 'primary.light',
+                              color: 'secondary.main'
+                            }
+                          }}
                         >
                           <Edit fontSize="small" />
                         </IconButton>
@@ -417,6 +431,13 @@ const ProjectList = () => {
                           onClick={() => {
                             setSelectedProject(project);
                             setOpenDelete(true);
+                          }}
+                          sx={{
+                            color: 'primary.main',
+                            '&:hover': { 
+                              backgroundColor: 'primary.light',
+                              color: 'secondary.main'
+                            }
                           }}
                         >
                           <Delete fontSize="small" />

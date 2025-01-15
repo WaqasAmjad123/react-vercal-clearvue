@@ -347,7 +347,12 @@ const ProjectForm = ({ open, onClose, onSubmit, initialData = null }) => {
         </DialogContent>
 
         <DialogActions sx={{ p: 2.5 }}>
-          <Button onClick={onClose} color="inherit">
+        <Button 
+            onClick={onClose}
+            sx={{ 
+              color: 'primary.main',
+            }}
+          >
             Cancel
           </Button>
           <Button type="submit" variant="contained" color="primary">
